@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+<div id="section" class="row my-5 justify-content-center">
+    <div class="col-md-4">
+        <h1 class="text-center mb-3">회원가입</h1>
+
+        <form  action="/member/save" method="post" enctype="multipart/form-data" class="card p-3">
+
+            <div class="input-group my-2">
+                <span class="input-group-text">이 &nbsp;메 &nbsp;일</span>
+                <input type="text" class="form-control" name="memberEmail" id="member-email" onkeyup="email_dup_check()" > <br>
+            </div>
+            <p id="email-dup-check-result"></p>
+
+            <div class="input-group my-2">
+                <span class="input-group-text">비밀번호&nbsp;</span>
+                <input type="text" class="form-control" name="memberPassword" id="password"
+                       placeholder="영문,숫자,특수문자 조합하여 8자~16자" maxlength="16" onkeyup="pass_check()">
+            </div>
+            <p id="password-check-result"></p>
+
+            <div class="input-group my-2">
+                <span class="input-group-text">이 &nbsp; &nbsp; &nbsp; 름</span>
+                <input type="text" class="form-control" name="memberName">
+            </div>
+            <div class="input-group my-2">
+                <span class="input-group-text">전화번호&nbsp;</span>
+                <input type="text" class="form-control" name="memberMobile" id="m_phoneNum"
+                       placeholder="ooo-oooo-oooo 형식으로 입력하세요"  onkeyup="mobile_check()">
+            </div>
+            <p id="mobile-check-result"></p>
+
+
+            <div class="input-group my-2">
+                <span class="input-group-text">프로필사진</span><br>
+                <input type="file" name="memberProfile" multiple>
+            </div>
+            <div class="text-center mt-3">
+                <input type="submit" class="btn btn-primary" value="회원가입">
+            </div>
+        </form>
+    </div>
+</div>
+    <br>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const email_dup_check = () => {
+        const email = document.querySelector('[name="memberEmail"]').value;
+        const result = document.getElementById("email-dup-check-result");
+        axios({
+            method: "post",
+            url: "/member/dup-check",
+            data: {
+                memberEmail: email
+            }
+        }).then(res => {
+            console.log("res", res);
+            result.innerHTML = "사용가능한 이메일입니다.";
+            result.style.color = "green";
+        }).catch(err => {
+            console.log("err", err);
+            result.innerHTML = "이미 사용 중인 이메일입니다.";
+            result.style.color = "red";
+        });
+    }
+
+
+
+</script>
+</html>

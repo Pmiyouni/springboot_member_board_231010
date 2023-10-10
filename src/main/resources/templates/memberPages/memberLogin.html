@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+<div th:if="${error}">
+    <p class="alert alert-danger text-center">로그인 실패. 다시 입력하세요!!</p>
+</div>
+
+<div  class="row my-5 justify-content-center">
+    <div class="col-md-4">
+        <h1 class="text-center mb-3">로그인</h1>
+        <div id="section">
+            <form action="/member/login" method="post" class="card p-3">
+                <div class="input-group my-2">
+                    <span class="input-group-text">이메일 &nbsp;</span>
+                    <input type="text" name="memberEmail"> <br>
+                </div>
+                <div class="input-group my-2">
+                    <span class="input-group-text">비밀번호</span>
+                    <input type="text" maxlangth="16" name="memberPassword"> <br>
+                </div>
+                <div class="input-group my-2">
+                    <input type="submit" value="로그인" class="form-control btn btn-primary mb-3">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+
+</body>
+</html>
