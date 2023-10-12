@@ -31,12 +31,12 @@ public class CommentEntity extends BaseEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    public static CommentEntity toSaveEntity(BoardEntity boardEntity, CommentDTO commentDTO) {
+    public static CommentEntity toSaveEntity(MemberEntity memberSaveEntity,BoardEntity boardEntity, CommentDTO commentDTO) {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setCommentWriter(commentDTO.getCommentWriter());
         commentEntity.setCommentContents(commentDTO.getCommentContents());
         commentEntity.setBoardEntity(boardEntity);
-        //boardFileEntity.setBoardEntity(savedEntity);
+        commentEntity.setMemberEntity(memberSaveEntity);
         return commentEntity;
     }
 }

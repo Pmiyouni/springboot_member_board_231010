@@ -45,9 +45,10 @@
         <button class="btn btn-primary" onclick="list_fn()">목록</button>
         <!-- 수정 또는 삭제 버튼을 클릭하면 비밀번호를 입력하는 input 창이 노출되고
             비밀번호 일치하면 수정페이지로 이동 또는 삭제처리를 진행함. -->
-        <button class="btn btn-warning" onclick="req_fn('update')">수정</button>
-        <button class="btn btn-danger" onclick="req_fn('delete')">삭제</button>
+        <button th:if="${session.loginEmail ==  board.boardWriter}" class="btn btn-warning" onclick="req_fn('update')">수정</button>
+        <button th:if="${session.loginEmail ==  board.boardWriter or session.loginEmail == 'admin'}" class="btn btn-danger" onclick="req_fn('delete')">삭제</button>
     </div>
+
 
     <div id="pass-check" class="mt-3">
 
@@ -55,7 +56,7 @@
 
     <div class="row g-2 mt-5" id="comment-write">
         <div class="col">
-            <input type="text" id="comment-writer" class="form-control" placeholder="작성자">
+            <input type="text" id="comment-writer" class="form-control" th:value="${session.loginEmail}"placeholder="작성자">
         </div>
         <div class="col-9">
             <input type="text" id="comment-contents" class="form-control" placeholder="내용">

@@ -1,10 +1,8 @@
 package com.icia.member_board.controller;
 
-import com.icia.board.dto.BoardDTO;
-import com.icia.board.dto.CommentDTO;
-import com.icia.board.service.BoardService;
-import com.icia.board.service.CommentService;
+
 import com.icia.member_board.dto.BoardDTO;
+import com.icia.member_board.dto.CommentDTO;
 import com.icia.member_board.service.BoardService;
 import com.icia.member_board.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -40,17 +38,6 @@ public class BoardController {
         return "redirect:/board";
     }
 
-
-    /*
-        rest api
-        /board/10 => 10번글
-        /board/20 => 20번글
-        /member/5 => 5번회원
-
-        3페이지에 있는 15번글
-        /board/3/15
-        /board/15?page=3
-     */
     @GetMapping
     public String findAll(Model model,
                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -118,8 +105,9 @@ public class BoardController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@RequestBody BoardDTO boardDTO) {
-        boardService.update(boardDTO);
+    public ResponseEntity update(@RequestBody BoardDTO boardDTO, HttpSession session) {
+        Long memberId1 = (Long)session.getAttribute("memberId");
+        boardService.update(boardDTO,memberId1);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

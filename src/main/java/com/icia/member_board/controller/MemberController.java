@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,7 +55,7 @@ public class MemberController {
             session.setAttribute("loginEmail", memberEntity.getMemberEmail());
             session.setAttribute("memberId", memberEntity.getId());
            // model.addAttribute("email", memberEntity.getMemberEmail());
-            return "boardPages/boardList";
+            return "redirect:"+"/board";
         } else {
             System.out.println("사용자 정보가 없습니다");
             error = true;
@@ -62,8 +64,8 @@ public class MemberController {
         }
     }
 
-        @GetMapping("/logout")
-        public String logout(HttpSession session) {
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
             session.removeAttribute("loginEmail");
             session.removeAttribute("memberId");
             // 세션 전체를 없앨 경우
@@ -74,4 +76,69 @@ public class MemberController {
     public String admin() {
         return "memberPages/admin";
     }
+
+    //my page
+    @GetMapping("/mypage")
+    public String updateForm(HttpSession session, Model model) {
+        // 세션에 저장된 이메일 꺼내기
+       String memberEmail = (String) session.getAttribute("loginEmail");
+       MemberEntity memberEntity =  memberService.findByMemberEmail(memberEmail);
+       MemberDTO memberDTO = MemberDTO.toDTO(memberEntity);
+       model.addAttribute("member", memberDTO);
+        return "memberPages/memberUpdate";
+    }
+
+    //회원정보수정
+    @PostMapping("/update")
+    public String update(@ModelAttribute MemberDTO memberDTO, HttpSession session) {
+           memberService.update(memberDTO);
+       // session.removeAttribute("loginEmail");
+        return "memberPages/memberDetail";
+    }
+
+    //회원수정
+    @PutMapping("/{id}")
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody MemberDTO memberDTO, HttpSession session) {
+        memberService.update(memberDTO);
+        //session.removeAttribute("loginEmail");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping
+    public String findAll(Model model) {
+        List<MemberDTO> memberDTOList = memberService.findAll();
+        model.addAttribute("memberList", memberDTOList);
+        return "memberPages/memberList";
+    }
+
+    @PostMapping("/axios/{id}")
+    public ResponseEntity detailAxios(@PathVariable("id") Long id) {
+        try {
+            MemberDTO memberDTO = memberService.findById(id);
+            return new ResponseEntity<>(memberDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @GetMapping("/{id}")
+    public String findById(@PathVariable("id") Long id, Model model) {
+        try {
+            MemberDTO memberDTO = memberService.findById(id);
+            model.addAttribute("member", memberDTO);
+            return "memberPages/memberDetail";
+        } catch (NoSuchElementException e) {
+            return "memberPages/NotFound";
+        } catch (Exception e) {
+            return "memberPages/NotFound";
+        }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id) {
+        memberService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 }

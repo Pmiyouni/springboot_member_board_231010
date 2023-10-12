@@ -17,7 +17,7 @@ public class CommentDTO {
     private Long boardId;
     private String createdAt;
     private String updatedAt;
-    private  Long member_id;
+    private  Long memberId;
 
     public static CommentDTO toDTO(CommentEntity commentEntity) {
         CommentDTO commentDTO = new CommentDTO();
@@ -27,7 +27,7 @@ public class CommentDTO {
         commentDTO.setBoardId(commentEntity.getBoardEntity().getId());
         commentDTO.setCreatedAt(UtilClass.dateTimeFormat(commentEntity.getCreatedAt()));
         commentDTO.setUpdatedAt(UtilClass.dateTimeFormat(commentEntity.getUpdatedAt()));
-        commentDTO.setMember_id(commentEntity.getMemberEntity().getId());
+        commentDTO.setMemberId(commentEntity.getMemberEntity().getId());
         return commentDTO;
     }
 }

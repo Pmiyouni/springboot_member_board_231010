@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,17 +29,17 @@ public class BoardService {
     private final MemberRepository memberRepository;
 
     public Long save(BoardDTO boardDTO, Long memberId1) throws IOException {
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId1);
-        if (optionalMemberEntity.isPresent()) {
-            MemberEntity memberEntity = optionalMemberEntity.get();
-        }
+//        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId1);
+//       MemberEntity memberSaveEntity = optionalMemberEntity.get();
+        MemberEntity memberSaveEntity = memberRepository.findById(memberId1).orElseThrow(() -> new NoSuchElementException());
+
         if (boardDTO.getBoardFile().get(0).isEmpty()) {
             // 첨부파일 없음
-            BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDTO);
+            BoardEntity boardEntity = BoardEntity.toSaveEntity(memberSaveEntity,boardDTO);
             return boardRepository.save(boardEntity).getId();
         } else {
             // 첨부파일 있음
-            BoardEntity boardEntity = BoardEntity.toSaveEntityWithFile(boardDTO);
+            BoardEntity boardEntity = BoardEntity.toSaveEntityWithFile(memberSaveEntity,boardDTO);
             // 게시글 저장처리 후 저장한 엔티티 가져옴
             BoardEntity savedEntity = boardRepository.save(boardEntity);
             // 파일 이름 처리, 파일 로컬에 저장 등
@@ -112,8 +111,9 @@ public class BoardService {
         boardRepository.deleteById(id);
     }
 
-    public void update(BoardDTO boardDTO) {
-        BoardEntity boardEntity = BoardEntity.toUpdateEntity(boardDTO);
+    public void update(BoardDTO boardDTO, Long memberId1) {
+        MemberEntity memberSaveEntity = memberRepository.findById(memberId1).orElseThrow(() -> new NoSuchElementException());
+        BoardEntity boardEntity = BoardEntity.toUpdateEntity(memberSaveEntity,boardDTO);
         boardRepository.save(boardEntity);
     }
 }

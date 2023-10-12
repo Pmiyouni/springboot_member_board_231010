@@ -12,18 +12,18 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/">home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/member/save">회원가입</a>
                     </li>
 
-                    <li class="nav-item">
-                        <div th:if="${session.loginEmail != null}">
+                    <li class="nav-item" th:if="${session.loginEmail != null}">
+<!--                        <div th:if="${session.loginEmail != null}">-->
                             <a class="nav-link" href="/board">글목록</a>
-                        </div>
+<!--                        </div>-->
                     </li>
-
+                    &nbsp; &nbsp; &nbsp;
                     <li class="menu-item">
                         <div th:if="${session.loginEmail == 'admin'}">
                             <a href="/member/admin">관리자 화면</a>
@@ -34,11 +34,11 @@
                             </div>
                         </div>
                     </li>
-
-                    &nbsp;
-                    <li class="nav-item align-middle " id="login-area">
+                    &nbsp; &nbsp;
+                    <li class="nav-item align-bottom " id="login-area">
 
                     </li>
+
                 </ul>
             </div>
         </div>
@@ -47,10 +47,11 @@
                     const loginEmail = [[${session.loginEmail}]];
                     if (loginEmail != null) {
                         if (loginEmail == "admin"){
-                            loginArea.innerHTML =" 관리자 로그인 중 "+ "<a href='/member/logout'>logout</a>"
+                            loginArea.innerHTML ="  관리자 로그인 중 "+ "&nbsp;<a href='/member/logout'> logout</a>"
+                            loginArea.style.color = "yellow";
                         }else {
                             loginArea.innerHTML =  loginEmail + "님 환영해요!</a>" +
-                                "<a href='/member/logout'>  logout</a>"
+                                "&nbsp;<a href='/member/logout'> logout</a>"
                             loginArea.style.color = "yellow";
 
                         }

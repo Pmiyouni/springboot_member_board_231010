@@ -5,6 +5,7 @@ import com.icia.member_board.dto.BoardDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class BoardEntity extends BaseEntity {
     @Column(length = 500)
     private String boardContents;
 
-    @Column
+    @Column(columnDefinition = "int default 0")
     private int boardHits;
 
     @Column
@@ -50,35 +51,37 @@ public class BoardEntity extends BaseEntity {
     private MemberEntity memberEntity;
 
 
-    public static BoardEntity toSaveEntity(BoardDTO boardDTO) {
+    public static BoardEntity toSaveEntity(MemberEntity memberSaveEntity,BoardDTO boardDTO) {
         BoardEntity boardEntity = new BoardEntity();
         boardEntity.setBoardWriter(boardDTO.getBoardWriter());
         boardEntity.setBoardTitle(boardDTO.getBoardTitle());
         boardEntity.setBoardPass(boardDTO.getBoardPass());
         boardEntity.setBoardContents(boardDTO.getBoardContents());
-        //boardFileEntity.setBoardEntity(savedEntity);
+        boardEntity.setMemberEntity(memberSaveEntity);
         boardEntity.setFileAttached(0);
         return boardEntity;
     }
 
-    public static BoardEntity toSaveEntityWithFile(BoardDTO boardDTO) {
+    public static BoardEntity toSaveEntityWithFile(MemberEntity memberSaveEntity,BoardDTO boardDTO) {
         BoardEntity boardEntity = new BoardEntity();
         boardEntity.setBoardWriter(boardDTO.getBoardWriter());
         boardEntity.setBoardTitle(boardDTO.getBoardTitle());
         boardEntity.setBoardPass(boardDTO.getBoardPass());
         boardEntity.setBoardContents(boardDTO.getBoardContents());
-        //boardFileEntity.setBoardEntity(savedEntity);
+        boardEntity.setMemberEntity(memberSaveEntity);
         boardEntity.setFileAttached(1);
         return boardEntity;
     }
 
-    public static BoardEntity toUpdateEntity(BoardDTO boardDTO) {
+    public static BoardEntity toUpdateEntity(MemberEntity memberSaveEntity,BoardDTO boardDTO) {
         BoardEntity boardEntity = new BoardEntity();
         boardEntity.setId(boardDTO.getId());
         boardEntity.setBoardWriter(boardDTO.getBoardWriter());
         boardEntity.setBoardTitle(boardDTO.getBoardTitle());
         boardEntity.setBoardPass(boardDTO.getBoardPass());
         boardEntity.setBoardContents(boardDTO.getBoardContents());
+        boardEntity.setFileAttached(boardDTO.getFileAttached());
+        boardEntity.setMemberEntity(memberSaveEntity);
         return boardEntity;
     }
 

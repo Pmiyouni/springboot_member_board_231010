@@ -16,6 +16,7 @@
     <input type="hidden" name="id" th:value="${board.id}">
     <input type="hidden" name="boardHits" th:value="${board.boardHits}">
     <input type="hidden" name="boardPass" th:value="${board.boardPass}">
+    <input type="hidden" name="fileAttached" th:value="${board.fileAttached}">
     <input type="button" value="수정" onclick="board_update()" class="btn btn-primary">
   </form>
 </div>
@@ -31,6 +32,8 @@
     const boardPass = document.querySelector('[name="boardPass"]').value;
     const boardHits = document.querySelector('[name="boardHits"]').value;
     const boardContents = document.querySelector('[name="boardContents"]').value;
+    const fileAttached = document.querySelector('[name="fileAttached"]').value;
+
     axios({
       method: "put",
       url: `/board/${id}`,
@@ -40,7 +43,8 @@
         boardWriter: boardWriter,
         boardContents: boardContents,
         boardHits: boardHits,
-        boardPass: boardPass
+        boardPass: boardPass,
+        fileAttached: fileAttached
       }
     }).then(res => {
       location.href = `/board/${id}`;

@@ -3,6 +3,7 @@ package com.icia.member_board.dto;
 
 import com.icia.member_board.entity.BoardEntity;
 import com.icia.member_board.entity.BoardFileEntity;
+import com.icia.member_board.entity.MemberEntity;
 import com.icia.member_board.util.UtilClass;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,7 @@ public class BoardDTO {
     private String boardContents;
     private String createdAt;
     private int boardHits;
-    private  Long member_id;
+    private  Long memberId;
 
     private List<MultipartFile> boardFile;
     private int fileAttached;
@@ -40,7 +41,7 @@ public class BoardDTO {
         boardDTO.setBoardContents(boardEntity.getBoardContents());
         boardDTO.setBoardHits(boardEntity.getBoardHits());
         boardDTO.setCreatedAt(UtilClass.dateTimeFormat(boardEntity.getCreatedAt()));
-        boardDTO.setMember_id(boardEntity.getMemberEntity().getId());
+        boardDTO.setMemberId(boardEntity.getMemberEntity().getId());
 
         // 파일 첨부 여부에 따라 파일이름 가져가기
         if (boardEntity.getFileAttached() == 1) {

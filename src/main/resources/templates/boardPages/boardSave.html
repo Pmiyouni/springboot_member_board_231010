@@ -10,7 +10,7 @@
 <div class="container mt-5 mb-5">
     <!-- 화면에 보여질 내용이 들어갈 부분 -->
     <form action="/board/save" method="post" class="row g-3" enctype="multipart/form-data">
-        <input type="text" name="boardWriter" class="form-control" placeholder="작성자">
+        <input type="text" name="boardWriter" class="form-control" th:value="${session.loginEmail}" placeholder="작성자">
         <input type="text" name="boardPass" class="form-control" placeholder="비밀번호">
         <input type="text" name="boardTitle" class="form-control" placeholder="제목">
         <textarea name="boardContents" cols="30" rows="10" class="form-control" placeholder="내용을 입력하세요"></textarea>

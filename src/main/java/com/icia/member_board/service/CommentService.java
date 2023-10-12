@@ -4,8 +4,10 @@ package com.icia.member_board.service;
 import com.icia.member_board.dto.CommentDTO;
 import com.icia.member_board.entity.BoardEntity;
 import com.icia.member_board.entity.CommentEntity;
+import com.icia.member_board.entity.MemberEntity;
 import com.icia.member_board.repository.BoardRepository;
 import com.icia.member_board.repository.CommentRepository;
+import com.icia.member_board.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +22,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
-    public Long save(CommentDTO commentDTO) {
+    private final MemberRepository memberRepository;
+
+    public Long save(CommentDTO commentDTO,Long memberId1 ) {
+        MemberEntity memberSaveEntity = memberRepository.findById(memberId1).orElseThrow(() -> new NoSuchElementException());
         BoardEntity boardEntity = boardRepository.findById(commentDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
-        CommentEntity commentEntity = CommentEntity.toSaveEntity(boardEntity, commentDTO);
+        CommentEntity commentEntity = CommentEntity.toSaveEntity(memberSaveEntity, boardEntity, commentDTO);
         return commentRepository.save(commentEntity).getId();
     }
 

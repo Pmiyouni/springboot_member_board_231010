@@ -1,6 +1,5 @@
 package com.icia.member_board.entity;
 
-
 import com.icia.member_board.dto.MemberDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -56,21 +55,19 @@ public class MemberEntity extends BaseEntity {
         memberEntity.setMemberName(memberDTO.getMemberName());
         memberEntity.setMemberBirth(memberDTO.getMemberBirth());
         memberEntity.setMemberMobile(memberDTO.getMemberMobile());
-        memberEntity.setOriginalFileName(memberDTO.getOriginalFileName());
-        memberEntity.setStoredFileName(memberDTO.getStoredFileName());
         memberEntity.setFileAttached(0);
         return memberEntity;
     }
 
-    public static MemberEntity toSaveEntityWithFile(MemberDTO memberDTO) {
+    public static MemberEntity toSaveEntityWithFile(MemberDTO memberDTO, String originalFilename, String storedFileName) {
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setMemberEmail(memberDTO.getMemberEmail());
         memberEntity.setMemberPassword(memberDTO.getMemberPassword());
         memberEntity.setMemberName(memberDTO.getMemberName());
         memberEntity.setMemberBirth(memberDTO.getMemberBirth());
         memberEntity.setMemberMobile(memberDTO.getMemberMobile());
-        memberEntity.setOriginalFileName(memberDTO.getOriginalFileName());
-        memberEntity.setStoredFileName(memberDTO.getStoredFileName());
+        memberEntity.setOriginalFileName(originalFilename);
+        memberEntity.setStoredFileName(storedFileName);
         memberEntity.setFileAttached(1);
         return memberEntity;
     }
@@ -82,8 +79,9 @@ public class MemberEntity extends BaseEntity {
         memberEntity.setMemberName(memberDTO.getMemberName());
         memberEntity.setMemberBirth(memberDTO.getMemberBirth());
         memberEntity.setMemberMobile(memberDTO.getMemberMobile());
-//        memberEntity.setOriginalFileName(memberDTO.getOriginalFileName());
-//        memberEntity.setStoredFileName(memberDTO.getStoredFileName());
+        memberEntity.setFileAttached(memberDTO.getFileAttached());
+        memberEntity.setOriginalFileName(memberDTO.getOriginalFileName());
+        memberEntity.setStoredFileName(memberDTO.getStoredFileName());
         return memberEntity;
     }
 
