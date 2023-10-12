@@ -2,11 +2,14 @@ package com.icia.member_board.service;
 
 
 import com.icia.member_board.dto.BoardDTO;
+import com.icia.member_board.dto.FavoriteDTO;
 import com.icia.member_board.entity.BoardEntity;
 import com.icia.member_board.entity.BoardFileEntity;
+import com.icia.member_board.entity.FavoriteEntity;
 import com.icia.member_board.entity.MemberEntity;
 import com.icia.member_board.repository.BoardFileRepository;
 import com.icia.member_board.repository.BoardRepository;
+import com.icia.member_board.repository.FavoriteRepository;
 import com.icia.member_board.repository.MemberRepository;
 import com.icia.member_board.util.UtilClass;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +33,8 @@ public class BoardService {
     private final BoardFileRepository boardFileRepository;
     private final MemberRepository memberRepository;
 
+    private final FavoriteRepository favoriteRepository;
+
     public Long save(BoardDTO boardDTO, Long memberId1) throws IOException {
 //        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId1);
 //       MemberEntity memberSaveEntity = optionalMemberEntity.get();
@@ -35,16 +42,16 @@ public class BoardService {
 
         if (boardDTO.getBoardFile().get(0).isEmpty()) {
             // 첨부파일 없음
-            BoardEntity boardEntity = BoardEntity.toSaveEntity(memberSaveEntity,boardDTO);
+            BoardEntity boardEntity = BoardEntity.toSaveEntity(memberSaveEntity, boardDTO);
             return boardRepository.save(boardEntity).getId();
         } else {
             // 첨부파일 있음
-            BoardEntity boardEntity = BoardEntity.toSaveEntityWithFile(memberSaveEntity,boardDTO);
+            BoardEntity boardEntity = BoardEntity.toSaveEntityWithFile(memberSaveEntity, boardDTO);
             // 게시글 저장처리 후 저장한 엔티티 가져옴
             BoardEntity savedEntity = boardRepository.save(boardEntity);
             // 파일 이름 처리, 파일 로컬에 저장 등
             // DTO에 담긴 파일리스트 꺼내기
-            for (MultipartFile boardFile: boardDTO.getBoardFile()) {
+            for (MultipartFile boardFile : boardDTO.getBoardFile()) {
                 // 업로드한 파일 이름
                 String originalFilename = boardFile.getOriginalFilename();
                 // 저장용 파일 이름
@@ -113,7 +120,37 @@ public class BoardService {
 
     public void update(BoardDTO boardDTO, Long memberId1) {
         MemberEntity memberSaveEntity = memberRepository.findById(memberId1).orElseThrow(() -> new NoSuchElementException());
-        BoardEntity boardEntity = BoardEntity.toUpdateEntity(memberSaveEntity,boardDTO);
+        BoardEntity boardEntity = BoardEntity.toUpdateEntity(memberSaveEntity, boardDTO);
         boardRepository.save(boardEntity);
     }
+
+    public boolean likeCheck(FavoriteDTO favoriteDTO) {
+        MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
+        BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
+        List<FavoriteEntity> favoriteEntityList = favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity, boardEntity);
+        if (favoriteEntityList.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Long like(FavoriteDTO favoriteDTO) {
+        MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
+        BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
+        int fcnt = favoriteRepository.increaseLike(memberEntity.getId(), boardEntity.getId());
+        System.out.println("fcnt = " + fcnt);
+        int ncnt = favoriteDTO.getNcnt();
+        FavoriteEntity favoriteEntity = FavoriteEntity.toFavoriteEntity(memberEntity, boardEntity, fcnt, ncnt);
+        return favoriteRepository.save(favoriteEntity).getId();
+    }
+
+    public FavoriteDTO findLikeById(Long id) {
+       FavoriteEntity favoriteEntity = favoriteRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+
+        return favoriteEntity;
+    }
+}
+
+
 }

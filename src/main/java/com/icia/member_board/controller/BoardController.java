@@ -3,6 +3,7 @@ package com.icia.member_board.controller;
 
 import com.icia.member_board.dto.BoardDTO;
 import com.icia.member_board.dto.CommentDTO;
+import com.icia.member_board.dto.FavoriteDTO;
 import com.icia.member_board.service.BoardService;
 import com.icia.member_board.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -106,9 +107,20 @@ public class BoardController {
 
     @PutMapping("/{id}")
     public ResponseEntity update(@RequestBody BoardDTO boardDTO, HttpSession session) {
-        Long memberId1 = (Long)session.getAttribute("memberId");
-        boardService.update(boardDTO,memberId1);
+        Long memberId = (Long)session.getAttribute("memberId");
+        boardService.update(boardDTO,memberId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PostMapping("/like")
+    public ResponseEntity like(@RequestBody FavoriteDTO favoriteDTO) {
+        boolean checkResult = boardService.likeCheck(favoriteDTO);
+        if (checkResult) {
+            Long id = boardService.like(favoriteDTO);
+            FavoriteDTO favoriteDTO1 = boardService.findLikeById(id);
+            return new ResponseEntity<>(favoriteDTO1, HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
