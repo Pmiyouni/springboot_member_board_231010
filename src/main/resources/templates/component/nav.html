@@ -23,8 +23,8 @@
                             <a class="nav-link" href="/board">글목록</a>
 <!--                        </div>-->
                     </li>
-                    &nbsp; &nbsp; &nbsp;
-                    <li class="nav-item">
+                    </ul>
+                <div class="nav-item">
                         <div th:if="${session.loginEmail == 'admin'}">
                             <a href="/member/admin">관리자 화면</a>
                         </div>
@@ -33,13 +33,11 @@
                             <a href="/member/mypage">My Page</a>
                             </div>
                         </div>
-                    </li>
-                    &nbsp; &nbsp;
-                    <li class="nav-item align-bottom " id="login-area">
+                    </div>
+             &nbsp;
+                    <div class="nav-item align-bottom " id="login-area">
 
-                    </li>
-
-                </ul>
+                    </div>
             </div>
         </div>
                 <script th:inline="javascript">
