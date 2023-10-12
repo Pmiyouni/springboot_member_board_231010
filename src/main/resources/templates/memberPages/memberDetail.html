@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav1 :: nav1}"></div>
+<h2 class="text-center">회원 상세 조회 </h2>
+<div class="container">
+
+    <table class="table table-bordered table-info">
+        <tr>
+            <th>회원번호</th>
+            <td th:text="${member.id}"></td>
+        </tr>
+        <tr>
+            <th>이메일</th>
+            <td th:text="${member.memberEmail}"></td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td th:text="${member.memberName}"></td>
+        </tr>
+        <tr>
+            <th>생일</th>
+            <td th:text="${member.memberBirth}"></td>
+        </tr>
+        <tr>
+            <th>전화</th>
+            <td th:text="${member.memberMobile}"></td>
+        </tr>
+        <tr th:if="${member.fileAttached == 1}">
+            <th>프로필사진</th>
+            <td>
+              <img th:src="@{|/upload/${member.storedFileName}}" width="100" height="100" alt="">
+            </td>
+        </tr>
+        <tr th:unless="${member.fileAttached == 1}">
+            <th>프로필사진</th>
+            <td>
+                <img th:src="@{http://via.placeholder.com/100x100}" alt="">
+            </td>
+        </tr>
+    </table>
+    <div>
+        <button class="btn btn-primary mb-3" th:onclick="member_remove([[${member.id}]])">회원탈퇴</button>
+    </div>
+
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script>
+    const member_remove = (id) => {
+        location.href = `/member/remove/${id}`;
+    }
+
+</script>
+</html>

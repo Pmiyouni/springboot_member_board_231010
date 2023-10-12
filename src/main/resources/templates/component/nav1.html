@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="nav1" id="nav1">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid ms-5 me-5">
+            <a class="navbar-brand" href="#">Member_Board</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/member/save">회원가입</a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.loginEmail != null}">
+<!--                        <div th:if="${session.loginEmail != null}">-->
+                            <a class="nav-link" href="/board">글목록</a>
+<!--                        </div>-->
+                    </li>
+                    &nbsp; &nbsp; &nbsp;
+                    <li class="menu-item">
+                        <div th:if="${session.loginEmail == 'admin'}">
+                            <a href="/member/admin">관리자 화면</a>
+                        </div>
+                        <div th:unless="${session.loginEmail == 'admin'}">
+                            <div th:if="${session.loginEmail != null}">
+                            <a href="/member/mypage">My Page</a>
+                            </div>
+                        </div>
+                    </li>
+                    &nbsp; &nbsp;
+                    <li class="nav-item align-bottom " id="login-area">
+
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+                <script th:inline="javascript">
+                    const loginArea = document.getElementById("login-area");
+                    const loginEmail = [[${session.loginEmail}]];
+                    if (loginEmail != null) {
+                        if (loginEmail == "admin"){
+                            loginArea.innerHTML ="  관리자 로그인 중 "+ "&nbsp;<a href='/member/logout'> logout</a>"
+                            loginArea.style.color = "yellow";
+                        }else {
+                            loginArea.innerHTML =  loginEmail + "님 환영해요!</a>" +
+                                "&nbsp;<a href='/member/logout'> logout</a>"
+                            loginArea.style.color = "yellow";
+
+                        }
+                    } else {
+                        loginArea.innerHTML = "<a href='/member/login'>로그인</a>";
+                        loginArea.style.color = "red";
+                    }
+                </script>
+    </nav>
+</div>
+</body>
+</html>

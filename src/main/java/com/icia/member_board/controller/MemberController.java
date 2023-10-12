@@ -133,6 +133,15 @@ public class MemberController {
             return "memberPages/NotFound";
         }
     }
+
+    @GetMapping("/remove/{id}")
+    public String remove(@PathVariable("id") Long id, HttpSession session){
+        memberService.delete(id);
+        session.removeAttribute("loginEmail");
+        session.removeAttribute("memberId");
+        return "redirect:/";
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id) {
         memberService.delete(id);

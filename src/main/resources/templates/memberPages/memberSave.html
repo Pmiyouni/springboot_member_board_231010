@@ -73,10 +73,61 @@
             console.log("err", err);
             result.innerHTML = "이미 사용 중인 이메일입니다.";
             result.style.color = "red";
-        });
+        })
     }
+        const pass_check = () => {
+            const pwdCheck= /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
+            const password = document.getElementById("password").value;
+            const result = document.getElementById("password-check-result");
 
 
+            if (password == ""){
+                result.innerHTML = "필수정보예요.";
+                result.style.color = "green";
+                result.style.fontSize = "14px";
+                password.focus();
+                return false;
+            }
+            else if (!pwdCheck.test(password)) {
+                result.innerHTML = "비밀번호는 영문+숫자+특수문자 조합하여 8~16자리를 사용해야 합니다";
+                result.style.color = "red"
+                result.style.fontSize = "14px";
+                password.focus();
+                return false;
+            }else {
+                result.innerHTML = "안전한 비밀번호 입니다.입력가능합니다";
+                result.style.color = "blue";
+                result.style.fontSize = "14px";
+                return true;
+            }
+        }
+
+        const mobile_check = () => {
+            const mobileCheck =/^\d{3}-?\d{3,4}-?\d{4}$/;
+            const m_phoneNum = document.getElementById("m_phoneNum").value;
+            const result = document.getElementById("mobile-check-result");
+
+
+            if (m_phoneNum == ""){
+                result.innerHTML = "필수정보예요.";
+                result.style.color = "green";
+                result.style.fontSize = "14px";
+                m_phoneNum.focus();
+                return false;
+            }
+            else if (!mobileCheck.test(m_phoneNum)) {
+                result.innerHTML = "올바른 휴대전화 형식이 아닙니다";
+                result.style.color = "red";
+                result.style.fontSize = "14px";
+                m_phoneNum.focus();
+                return false;
+            }else {
+                result.innerHTML = "입력가능합니다";
+                result.style.color = "blue";
+                result.style.fontSize = "14px";
+                return true;
+            }
+        }
 
 </script>
 </html>

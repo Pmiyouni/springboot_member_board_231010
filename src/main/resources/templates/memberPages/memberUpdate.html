@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav1 :: nav1}"></div>
+
+<div  class="row my-5 justify-content-center">
+  <div class="col-md-4">
+    <h1 class="text-center mb-3">회원 수정</h1>
+    <div id="section">
+      <form action="/member/update" method="post" name="updateForm" class="card p-3">
+        <input type="hidden" name="id" th:value="${member.id}">
+        <div class="input-group my-2">
+          <span class="input-group-text w-25">이메일 &nbsp;</span>
+          <input class="form-control" type="text" name="memberEmail" th:value="${member.memberEmail}" placeholder="이메일"
+                 readonly> <br>
+        </div>
+        <div class="input-group my-2">
+          <span class="input-group-text w-25">비밀번호</span>
+          <input class="form-control"  type="text" size="20" name="memberPassword" id="member-password" placeholder="비밀번호"> <br>
+        </div>
+        <div class="input-group my-2">
+          <span class="input-group-text w-25">이 &nbsp; &nbsp; 름</span>
+          <input  class="form-control" type="text" name="memberName" th:value="${member.memberName}" placeholder="이름"> <br>
+        </div>
+        <div class="input-group my-2">
+          <span class="input-group-text w-25">생 &nbsp; &nbsp; 일</span>
+          <input class="form-control" type="date"  name="memberBirth" th:value="${member.memberBirth}" placeholder="생일"> <br>
+        </div>
+        <div class="input-group my-2">
+          <span class="input-group-text w-25">전화번호</span>
+          <input class="form-control" type="text" name="memberMobile" th:value="${member.memberMobile}" placeholder="전화번호"><br>
+        </div>
+        <div>
+        <input  type="hidden" name="fileAttached" th:value="${member.fileAttached}"><br>
+        </div>
+        <div>
+        <input  type="hidden" name="originalFileName" th:value="${member.originalFileName}" ><br>
+        </div>
+        <div>
+        <input  type="hidden" name="storedFileName" th:value="${member.storedFileName}" ><br>
+        </div>
+      </form>
+
+        <div>
+          <button class="btn btn-primary mb-3" th:onclick="member_update()">수정</button>
+          <button class="btn btn-secondary mb-3" th:onclick="member_detail()">조회</button>
+        </div>
+
+    <br>
+
+<div th:replace="~{component/footer :: footer}"></div>
+    </div>
+  </div>
+</div>
+</body>
+<script th:inline="javascript">
+  const member_detail = () => {
+    const id = document.querySelector('[name="id"]').value;
+    location.href = `/member/${id}`;
+  }
+
+  const member_update = () => {
+    const passDB = [[${member.memberPassword}]];
+    const passInput = document.querySelector('[name="memberPassword"]').value;
+    const id = document.querySelector('[name="id"]').value;
+    const name = document.querySelector('[name="memberName"]').value;
+    const birth = document.querySelector('[name="memberBirth"]').value;
+    const email = document.querySelector('[name="memberEmail"]').value;
+    const mobile = document.querySelector('[name="memberMobile"]').value;
+    const fileAttached = document.querySelector('[name="fileAttached"]').value;
+    const originalFileName = document.querySelector('[name="originalFileName"]').value;
+    const storedFileName = document.querySelector('[name="storedFileName"]').value;
+
+    if (passDB == passInput) {
+      axios({
+        method: "put",
+        url: `/member/${id}`,
+        data: {
+          id: id,
+          memberEmail: email,
+          memberPassword: passInput,
+          memberName: name,
+          memberBirth: birth,
+          memberMobile: mobile,
+          fileAttached: fileAttached,
+          originalFileName: originalFileName,
+          storedFileName: storedFileName
+        }
+      }).then(res => {
+        alert("정보수정이 완료되었습니다.");
+        location.href = `/member/${id}`;
+      }).catch(err => {
+        alert("정보수정에 실패하였습니다!");
+      });
+    } else {
+      alert("비밀번호가 일치하지 않습니다!");
+    }
+  }
+</script>
+</html>
