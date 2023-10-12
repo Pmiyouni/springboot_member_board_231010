@@ -11,31 +11,31 @@
     <!-- 화면에 보여질 내용이 들어갈 부분 -->
     <table class="table table-hover">
         <tr>
-            <th>id</th>
+            <th>번호</th>
             <td th:text="${board.id}"></td>
         </tr>
         <tr>
-            <th>title</th>
+            <th>제목</th>
             <td th:text="${board.boardTitle}"></td>
         </tr>
         <tr>
-            <th>writer</th>
+            <th>작성자</th>
             <td th:text="${board.boardWriter}"></td>
         </tr>
         <tr>
-            <th>date</th>
+            <th>작성일시</th>
             <td th:text="${board.createdAt}"></td>
         </tr>
         <tr>
-            <th>hits</th>
+            <th>조회수</th>
             <td th:text="${board.boardHits}"></td>
         </tr>
         <tr>
-            <th>contents</th>
+            <th>내용</th>
             <td th:text="${board.boardContents}"></td>
         </tr>
         <tr th:if="${board.fileAttached == 1}">
-            <th>image</th>
+            <th>이미지</th>
             <td th:each="fileName: ${board.storedFileName}">
                 <img th:src="@{|/upload/${fileName}}" width="200" height="200" alt="">
             </td>
@@ -72,14 +72,18 @@
         <div th:unless="${commentList == null}">
             <table class="table">
                 <tr>
-                    <th>writer</th>
-                    <th>contents</th>
-                    <th>date</th>
+                    <th>작성자</th>
+                    <th>내용</th>
+                    <th>작성일시</th>
                 </tr>
                 <tr th:each="comment: ${commentList}">
                     <td th:text="${comment.commentWriter}"></td>
                     <td th:text="${comment.commentContents}"></td>
-                    <td th:text="${comment.createdAt}"></td>
+                    <td th:text="${comment.createdAt}">
+                    <td>
+                    <button th:if="${session.loginEmail == comment.commentWriter}" class="btn btn-warning" th:onclick="comment_delete([[${comment.id}]])">삭제</button>
+
+                </td>
                 </tr>
             </table>
         </div>
@@ -96,9 +100,9 @@
         const resultArea = document.querySelector("#comment-list");
         let output = "        <table class=\"table\">\n" +
             "            <tr>\n" +
-            "                <th>writer</th>\n" +
-            "                <th>contents</th>\n" +
-            "                <th>date</th>\n" +
+            "                <th>작성자</th>\n" +
+            "                <th>내용</th>\n" +
+            "                <th>작성일시</th>\n" +
             "            </tr>";
         for (let i in commentList) {
             output += "<tr>\n" +
@@ -169,5 +173,20 @@
             alert("비밀번호가 일치하지 않습니다!");
         }
     }
+
+    const comment_delete = (id) => {
+        axios({
+            method: "delete",
+            url: `/comment/${id}`
+        }).then(res => {
+            alert("댓글 삭제 성공");
+            location.href = "/board";
+        }).catch(err => {
+            alert("댓글 삭제 실패");
+        });
+    }
+
+
+
 </script>
 </html>
