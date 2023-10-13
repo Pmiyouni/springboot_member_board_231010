@@ -33,9 +33,9 @@ public class BoardController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute BoardDTO boardDTO, HttpSession session) throws IOException {
-        Long memberId1 = (Long)session.getAttribute("memberId");
+        Long memberId1 = (Long) session.getAttribute("memberId");
         System.out.println(memberId1);
-        boardService.save(boardDTO,memberId1);
+        boardService.save(boardDTO, memberId1);
         return "redirect:/board";
     }
 
@@ -61,7 +61,7 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id, Model model,
+    public String findById(@PathVariable("id") Long id, Model model,HttpSession session,
                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                            @RequestParam(value = "type", required = false, defaultValue = "boardTitle") String type,
                            @RequestParam(value = "q", required = false, defaultValue = "") String q) {
@@ -69,9 +69,12 @@ public class BoardController {
         model.addAttribute("page", page);
         model.addAttribute("type", type);
         model.addAttribute("q", q);
+        Long memberId = (Long) session.getAttribute("memberId");
         try {
             BoardDTO boardDTO = boardService.findById(id);
             model.addAttribute("board", boardDTO);
+            FavoriteDTO favoriteDTO = boardService.findByDTO(memberId,id);
+            model.addAttribute("favorite", favoriteDTO);
             List<CommentDTO> commentDTOList = commentService.findAll(id);
             if (commentDTOList.size() > 0) {
                 model.addAttribute("commentList", commentDTOList);
@@ -107,10 +110,11 @@ public class BoardController {
 
     @PutMapping("/{id}")
     public ResponseEntity update(@RequestBody BoardDTO boardDTO, HttpSession session) {
-        Long memberId = (Long)session.getAttribute("memberId");
-        boardService.update(boardDTO,memberId);
+        Long memberId = (Long) session.getAttribute("memberId");
+        boardService.update(boardDTO, memberId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PostMapping("/like")
     public ResponseEntity like(@RequestBody FavoriteDTO favoriteDTO) {
         boolean checkResult = boardService.likeCheck(favoriteDTO);
@@ -118,9 +122,23 @@ public class BoardController {
             Long id = boardService.like(favoriteDTO);
             FavoriteDTO favoriteDTO1 = boardService.findLikeById(id);
             return new ResponseEntity<>(favoriteDTO1, HttpStatus.OK);
-        } else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>("사용불가능", HttpStatus.CONFLICT);
         }
     }
 
+    @PostMapping("/hate")
+    public ResponseEntity hate(@RequestBody FavoriteDTO favoriteDTO) {
+
+        boolean checkResult = boardService.likeCheck(favoriteDTO);
+        if (checkResult) {
+            Long id = boardService.like(favoriteDTO);
+            FavoriteDTO favoriteDTO1 = boardService.findLikeById(id);
+            return new ResponseEntity<>(favoriteDTO1, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("사용불가능", HttpStatus.CONFLICT);
+        }
+    }
 }
+
+

@@ -52,15 +52,15 @@
 
     </div>
 
-    <div class="col text-end"  style=" height: auto; width: 300px;">
+    <div class="col"  style=" height: auto; width: 300px;">
         <button  class="btn btn-outline-info" id="count" th:onclick="board_like()"> 좋아요!! 클릭</button>
         <i class="bi bi-emoji-heart-eyes-fill"></i>
-        <span class="me-3" th:text="${board.fcnt}"></span>
+        <span class="me-3" th:text="${favorite.fcnt}"></span>
     </div>
-    <div class="col text-start"  style=" height: auto; width: 300px;">
+    <div class="col"  style=" height: auto; width: 300px;">
         <button  class="btn btn-outline-warning" id="count2" th:onclick="board_hate()"> 싫어요!! 클릭</button>
         <i class="bi bi-emoji-frown-fill"></i>
-        <span class="me-3" th:text="${board.ncnt}"></span>
+        <span class="me-3" th:text="${favorite.ncnt}"></span>
 
     </div>
 
@@ -208,9 +208,10 @@
             }
         }).then(res => {
             console.log("res.data: ", res.data);
-            comment_list(res.data);
+            alert("좋아요 성공!");
+            location.href = "/board/{boardId}";
         }).catch(err => {
-            console.log("좋아요 실패!");
+            alert("좋아요 실패!");
         });
     }
 
@@ -226,9 +227,9 @@
                 boardId: boardId
             }
         }).then(res => {
-            comment_list(res.data);
+            alert("싫어요 성공!");
         }).catch(err => {
-            console.log("싫어요 실패");
+            alert("싫어요 실패");
         });
     }
 </script>

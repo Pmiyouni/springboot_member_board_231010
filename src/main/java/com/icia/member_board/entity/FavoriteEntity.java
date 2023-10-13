@@ -43,4 +43,6 @@ public class FavoriteEntity {
         return favoriteEntity;
     }
 
+    public FavoriteEntity orElseThrow(Object o) {
+    }
 }

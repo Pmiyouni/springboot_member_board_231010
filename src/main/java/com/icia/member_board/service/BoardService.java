@@ -127,8 +127,8 @@ public class BoardService {
     public boolean likeCheck(FavoriteDTO favoriteDTO) {
         MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
         BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
-        List<FavoriteEntity> favoriteEntityList = favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity, boardEntity);
-        if (favoriteEntityList.isEmpty()) {
+        FavoriteEntity favoriteEntity = favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity, boardEntity);
+        if (favoriteEntity != null) {
             return true;
         } else {
             return false;
@@ -147,10 +147,19 @@ public class BoardService {
 
     public FavoriteDTO findLikeById(Long id) {
        FavoriteEntity favoriteEntity = favoriteRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+       FavoriteDTO favoriteDTO= FavoriteDTO.toDTO(favoriteEntity);
+        return favoriteDTO;
+    }
 
-        return favoriteEntity;
+    public  FavoriteDTO findByDTO(Long memberId, Long boardId){
+        MemberEntity memberEntity = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException());
+        BoardEntity boardEntity = boardRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException());
+        FavoriteEntity favoriteEntity = favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity, boardEntity)
+                .orElseThrow(() -> new NoSuchElementException());
+        FavoriteDTO favoriteDTO= FavoriteDTO.toDTO(favoriteEntity);
+        System.out.println(favoriteDTO);
+        return favoriteDTO;
     }
 }
 
 
-}
