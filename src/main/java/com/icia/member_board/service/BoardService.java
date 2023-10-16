@@ -124,42 +124,53 @@ public class BoardService {
         boardRepository.save(boardEntity);
     }
 
+    @Transactional
     public boolean likeCheck(FavoriteDTO favoriteDTO) {
         MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
         BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
-        FavoriteEntity favoriteEntity = favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity, boardEntity);
-        if (favoriteEntity != null) {
-            return true;
+        Optional<FavoriteEntity> optionalFavoriteEntity =  favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity,boardEntity);
+        if (optionalFavoriteEntity.isEmpty()) {
+
+             return true;
         } else {
             return false;
         }
     }
 
-    public Long like(FavoriteDTO favoriteDTO) {
-        MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
-        BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
-        int fcnt = favoriteRepository.increaseLike(memberEntity.getId(), boardEntity.getId());
-        System.out.println("fcnt = " + fcnt);
-        int ncnt = favoriteDTO.getNcnt();
-        FavoriteEntity favoriteEntity = FavoriteEntity.toFavoriteEntity(memberEntity, boardEntity, fcnt, ncnt);
-        return favoriteRepository.save(favoriteEntity).getId();
+    @Transactional
+    public int slike(FavoriteDTO favoriteDTO) {
+        System.out.println("slike = " + favoriteDTO);
+//        MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
+//        BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
+        int fcnt = boardRepository.increaseLike(favoriteDTO.getBoardId());
+
+        return fcnt;
+
     }
 
-    public FavoriteDTO findLikeById(Long id) {
-       FavoriteEntity favoriteEntity = favoriteRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
-       FavoriteDTO favoriteDTO= FavoriteDTO.toDTO(favoriteEntity);
-        return favoriteDTO;
+    public FavoriteEntity findLikeById(FavoriteDTO favoriteDTO) {
+    MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
+    BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
+    FavoriteEntity favoriteEntity = FavoriteEntity.toFavoriteEntity(memberEntity,boardEntity);
+    favoriteRepository.save(favoriteEntity);
+    return favoriteEntity;
+    }
+//
+//
+//    public FavoriteDTO findByBoardId(Long id, Long memberId) {
+//        MemberEntity memberEntity = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException());
+//        BoardEntity boardEntity = boardRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+//        FavoriteEntity favoriteEntity = favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity, boardEntity);
+//        if (favoriteEntity != null) {
+//            FavoriteDTO favoriteDTO= FavoriteDTO.toDTO(favoriteEntity);
+//            return favoriteDTO;
+//        } else {
+//            return null;
+//        }
+//    }
+
+
     }
 
-    public  FavoriteDTO findByDTO(Long memberId, Long boardId){
-        MemberEntity memberEntity = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException());
-        BoardEntity boardEntity = boardRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException());
-        FavoriteEntity favoriteEntity = favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity, boardEntity)
-                .orElseThrow(() -> new NoSuchElementException());
-        FavoriteDTO favoriteDTO= FavoriteDTO.toDTO(favoriteEntity);
-        System.out.println(favoriteDTO);
-        return favoriteDTO;
-    }
-}
 
 

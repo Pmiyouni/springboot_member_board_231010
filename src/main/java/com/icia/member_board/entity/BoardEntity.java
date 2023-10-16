@@ -39,6 +39,12 @@ public class BoardEntity extends BaseEntity {
     private int fileAttached;
 
 
+    @Column(columnDefinition = "int default 0")
+    private int fcnt;
+
+
+
+
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BoardFileEntity> boardFileEntityList = new ArrayList<>();
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -82,6 +88,8 @@ public class BoardEntity extends BaseEntity {
         boardEntity.setBoardContents(boardDTO.getBoardContents());
         boardEntity.setFileAttached(boardDTO.getFileAttached());
         boardEntity.setMemberEntity(memberSaveEntity);
+        //boardEntity.setFcnt(boardDTO.getFcnt());
+       // boardEntity.setNcnt(boardDTO.getNcnt());
         return boardEntity;
     }
 

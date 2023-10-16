@@ -9,15 +9,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FavoriteRepository extends JpaRepository<FavoriteEntity,Long> {
 
-//  Optional<FavoriteEntity> findByMemberEntityAndCommentEntity(MemberEntity memberEntity, CommentEntity commentEntity);
-  FavoriteEntity findByMemberEntityAndBoardEntity(MemberEntity memberEntity, BoardEntity boardEntity);
+  //Optional<FavoriteEntity> findByMemberEntityAndCommentEntity(MemberEntity memberEntity, CommentEntity commentEntity);
+  //FavoriteEntity findByMemberEntityAndBoardEntity(MemberEntity memberEntity, BoardEntity boardEntity);
   //void deleteByMemberEntityAndCommentEntity(MemberEntity memberEntity, CommentEntity commentEntity);
 
-  @Modifying
-  @Query(value = "update FavoriteEntity f set f.fcnt=f.fcnt+1 where f.memberEntity.id=:memberId and f.boardEntity.id=:boardId")
-  int increaseLike(@Param("memberId") Long memberId, @Param("boardId") Long boardId);
 
+
+  Optional<FavoriteEntity> findByBoardEntity(BoardEntity boardEntity);
+
+  Optional<FavoriteEntity> findByMemberEntityAndBoardEntity(MemberEntity memberEntity, BoardEntity boardEntity);
 }
