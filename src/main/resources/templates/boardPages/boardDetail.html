@@ -49,16 +49,14 @@
         <button th:if="${session.loginEmail ==  board.boardWriter or session.loginEmail == 'admin'}" class="btn btn-danger" onclick="req_fn('delete')">삭제</button>
 
 
-    <div   style=" height: auto; width: 300px;">
+    <div  class="justify-content-end" style=" height: auto ">
         <button  class="btn btn-outline-info" id="count" th:onclick="board_like()"> 좋아요!! 클릭</button>
         <i class="bi bi-emoji-heart-eyes-fill"></i>
         <span class="me-3" th:text="${board.fcnt}"></span>
-    </div>
-    <div   style=" height: auto; width: 300px;">
+
         <button  class="btn btn-outline-warning" id="count2" th:onclick="board_hate()"> 싫어요!! 클릭</button>
         <i class="bi bi-emoji-frown-fill"></i>
-        <span class="me-3" th:text="${board.fcnt}"></span>
-
+        <span class="me-3" th:text="${board.ncnt}"></span>
     </div>
    </div>
 
@@ -215,7 +213,27 @@
             location.href = `/board/${boardId}`;
 
         }).catch(err => {
-            alert("좋아요 실패!");
+            alert("좋아요 실패(중복 안되요!!)");
+        });
+
+    }
+    const board_hate = () => {
+
+        const memberId = [[${session.memberId}]];
+        const boardId = [[${board.id}]];
+        axios({
+            method: "post",
+            url: "/board/hate",
+            data: {
+                memberId: memberId,
+                boardId: boardId
+            }
+        }).then(res => {
+            alert("싫어요 성공!");
+            location.href = `/board/${boardId}`;
+
+        }).catch(err => {
+            alert("싫어요 실패(중복안되요!!)");
         });
 
     }

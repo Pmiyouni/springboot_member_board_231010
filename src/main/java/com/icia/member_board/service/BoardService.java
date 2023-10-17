@@ -124,30 +124,31 @@ public class BoardService {
         boardRepository.save(boardEntity);
     }
 
+    //회원번호와 게시판 번호 중복여부 확인(테이블 따로 저장)
     @Transactional
     public boolean likeCheck(FavoriteDTO favoriteDTO) {
         MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
         BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
         Optional<FavoriteEntity> optionalFavoriteEntity =  favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity,boardEntity);
         if (optionalFavoriteEntity.isEmpty()) {
-
              return true;
         } else {
             return false;
         }
     }
-
+//좋아요 처리
     @Transactional
-    public int slike(FavoriteDTO favoriteDTO) {
-        System.out.println("slike = " + favoriteDTO);
-//        MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
-//        BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
-        int fcnt = boardRepository.increaseLike(favoriteDTO.getBoardId());
+    public void like(FavoriteDTO favoriteDTO) {
+        boardRepository.increaseLike(favoriteDTO.getBoardId());
+    }
+   //싫어요 처리
+    @Transactional
+    public void hate(FavoriteDTO favoriteDTO) {
+        boardRepository.increaseHate(favoriteDTO.getBoardId());
 
-        return fcnt;
 
     }
-
+    //회원번호와 게시판 번호 중복확인위해 관리(테이블 따로 저장)
     public FavoriteEntity findLikeById(FavoriteDTO favoriteDTO) {
     MemberEntity memberEntity = memberRepository.findById(favoriteDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
     BoardEntity boardEntity = boardRepository.findById(favoriteDTO.getBoardId()).orElseThrow(() -> new NoSuchElementException());
@@ -155,22 +156,7 @@ public class BoardService {
     favoriteRepository.save(favoriteEntity);
     return favoriteEntity;
     }
-//
-//
-//    public FavoriteDTO findByBoardId(Long id, Long memberId) {
-//        MemberEntity memberEntity = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException());
-//        BoardEntity boardEntity = boardRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
-//        FavoriteEntity favoriteEntity = favoriteRepository.findByMemberEntityAndBoardEntity(memberEntity, boardEntity);
-//        if (favoriteEntity != null) {
-//            FavoriteDTO favoriteDTO= FavoriteDTO.toDTO(favoriteEntity);
-//            return favoriteDTO;
-//        } else {
-//            return null;
-//        }
-//    }
-
-
-    }
+  }
 
 
 

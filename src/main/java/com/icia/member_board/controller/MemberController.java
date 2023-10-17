@@ -42,20 +42,22 @@ public class MemberController {
         }
     }
     @GetMapping("/login")
-    public String login() {
-        //model.addAttribute("redirectURI", redirectURI);
+    public String login(@RequestParam(value = "redirectURI", defaultValue = "/member/mypage")
+                            String redirectURI, Model model) {
+        model.addAttribute("redirectURI", redirectURI);
         return "memberPages/memberLogin";
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session,Model model){
+    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session,Model model,
+                        @RequestParam("redirectURI") String redirectURI){
         MemberEntity memberEntity = memberService.login(memberDTO);
         boolean error= false;
         if (memberEntity != null) {
             session.setAttribute("loginEmail", memberEntity.getMemberEmail());
             session.setAttribute("memberId", memberEntity.getId());
-           // model.addAttribute("email", memberEntity.getMemberEmail());
-            return "redirect:"+"/board";
+          //  return "redirect:"+"/board";
+            return "redirect:" + redirectURI;
         } else {
             System.out.println("사용자 정보가 없습니다");
             error = true;

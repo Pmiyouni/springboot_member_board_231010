@@ -20,11 +20,6 @@ public class FavoriteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(columnDefinition = "int default 0")
-//    private int fcnt;
-//
-//    @Column(columnDefinition = "int default 0")
-//    private int ncnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -38,8 +33,6 @@ public class FavoriteEntity {
         FavoriteEntity favoriteEntity = new FavoriteEntity();
         favoriteEntity.setMemberEntity(memberEntity);
         favoriteEntity.setBoardEntity(boardEntity);
-//        favoriteEntity.setFcnt(fcnt);
-//        favoriteEntity.setNcnt(ncnt);
         return favoriteEntity;
     }
 

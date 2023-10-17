@@ -28,7 +28,7 @@ public class BoardDTO {
     private  Long memberId;
 
     private int fcnt = 0; //좋아요수
-    //private int ncnt = 0; //싫어요수
+    private int ncnt = 0; //싫어요수
 
     private List<MultipartFile> boardFile;
     private int fileAttached;
@@ -46,7 +46,7 @@ public class BoardDTO {
         boardDTO.setCreatedAt(UtilClass.dateTimeFormat(boardEntity.getCreatedAt()));
         boardDTO.setMemberId(boardEntity.getMemberEntity().getId());
         boardDTO.setFcnt(boardEntity.getFcnt());
-      //  boardDTO.setNcnt(boardEntity.getNcnt());
+        boardDTO.setNcnt(boardEntity.getNcnt());
 
         // 파일 첨부 여부에 따라 파일이름 가져가기
         if (boardEntity.getFileAttached() == 1) {

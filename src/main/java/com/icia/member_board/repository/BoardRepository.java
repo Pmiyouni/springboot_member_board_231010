@@ -24,7 +24,11 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     @Modifying
     @Query(value = "update BoardEntity b set b.fcnt=b.fcnt+1 where b.id=:id")
-   int increaseLike(@Param("id") Long id);
+   void increaseLike(@Param("id") Long id);
+
+    @Modifying
+    @Query(value = "update BoardEntity b set b.ncnt=b.ncnt+1 where b.id=:id")
+    void increaseHate(@Param("id") Long id);
 
     // select * from board_table where board_title=?
     List<BoardEntity> findByBoardTitle(String boardTitle);

@@ -62,7 +62,7 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id, Model model,HttpSession session,
+    public String findById(@PathVariable("id") Long id, Model model,
                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                            @RequestParam(value = "type", required = false, defaultValue = "boardTitle") String type,
                            @RequestParam(value = "q", required = false, defaultValue = "") String q) {
@@ -70,15 +70,11 @@ public class BoardController {
         model.addAttribute("page", page);
         model.addAttribute("type", type);
         model.addAttribute("q", q);
-
-        //Long memberId = (Long) session.getAttribute("memberId");
         try {
             BoardDTO boardDTO = boardService.findById(id);
             model.addAttribute("board", boardDTO);
             System.out.println("boardDTO = " + boardDTO);
 
-//            model.addAttribute("favorite", favoriteDTO);
-//            System.out.println("favoriteDTO = " + favoriteDTO);
             List<CommentDTO> commentDTOList = commentService.findAll(id);
             if (commentDTOList.size() > 0) {
                 model.addAttribute("commentList", commentDTOList);
@@ -119,35 +115,34 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //좋아요 처리
     @PostMapping("/like")
     public ResponseEntity clike(@RequestBody FavoriteDTO favoriteDTO) {
        boolean result = boardService.likeCheck(favoriteDTO);
-        System.out.println("result = " + result);
         if (result) {
             FavoriteEntity favoriteEntity = boardService.findLikeById(favoriteDTO);
             FavoriteDTO favoriteDTO1 = FavoriteDTO.toDTO(favoriteEntity);
-            int fcnt= boardService.slike(favoriteDTO1);
-            System.out.println("fcnt = " + fcnt);
-           
+            boardService.like(favoriteDTO1);
             return new ResponseEntity<>("사용가능", HttpStatus.OK);
         } else {
-            System.out.println("fff");
             return new ResponseEntity<>("사용불가능", HttpStatus.CONFLICT);
         }
     }
 
-//    @PostMapping("/hate")
-//    public ResponseEntity hate(@RequestBody FavoriteDTO favoriteDTO) {
-//
-//        boolean checkResult = boardService.likeCheck(favoriteDTO);
-//        if (checkResult) {
-//            Long id = boardService.like(favoriteDTO);
-//            FavoriteDTO favoriteDTO1 = boardService.findLikeById(id);
-//            return new ResponseEntity<>(favoriteDTO1, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("사용불가능", HttpStatus.CONFLICT);
-//        }
-//    }
+    //싫어요 처리
+    @PostMapping("/hate")
+    public ResponseEntity chate(@RequestBody FavoriteDTO favoriteDTO) {
+
+        boolean result = boardService.likeCheck(favoriteDTO);
+        if (result) {
+            FavoriteEntity favoriteEntity = boardService.findLikeById(favoriteDTO);
+            FavoriteDTO favoriteDTO1 = FavoriteDTO.toDTO(favoriteEntity);
+            boardService.hate(favoriteDTO1);
+            return new ResponseEntity<>("사용가능", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("사용불가능", HttpStatus.CONFLICT);
+        }
+    }
 }
 
 

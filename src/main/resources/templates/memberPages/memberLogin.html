@@ -15,6 +15,7 @@
         <h1 class="text-center mb-3">로그인</h1>
         <div id="section">
             <form action="/member/login" method="post" class="card p-3">
+                <input type="hidden" name="redirectURI" th:value="${redirectURI}">
                 <div class="input-group my-2">
                     <span class="input-group-text w-25">이 메 일 &nbsp;</span>
                     <input class="form-control" type="text" name="memberEmail"> <br>
